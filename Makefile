@@ -1,0 +1,15 @@
+CXXFLAGS=-g -O3 -DMANUAL_CLEARING
+FILLING_LOOP_SORTLESS=filling_loop_sortless
+
+PROJECTS=$(FILLING_LOOP_SORTLESS)
+
+$(FILLING_LOOP_SORTLESS): $(FILLING_LOOP_SORTLESS).o
+	$(CXX) $(CXXFLAGS) $^ -o $@
+
+all: $(PROJECTS)
+
+clean:
+	rm -f $(FILLING_LOOP_SORTLESS) *.o
+
+%.o: %.cpp
+	$(CXX) $(CXXFLAGS) -c $^ -o $@
