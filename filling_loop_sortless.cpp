@@ -169,7 +169,7 @@ struct filling_kind {
 int main(int argc, char **argv)
 {
     const int repeats = 1000;
-    const long long n=250;
+    const long long n = 500;
     struct timespec ts_start, ts_end, ts_res;
     const struct filling_kind kinds[] = {
         { filling_origin,           "filling_origin" },
@@ -180,6 +180,9 @@ int main(int argc, char **argv)
         { filling_lesssort_alloc,   "filling_lesssort_alloc" },
         { NULL, NULL }
     };
+
+    printf("repeats: %d\n", repeats);
+    printf("count: %d\n", n);
 
     int i;
     for(i=0; kinds[i].func != NULL; i++) {
