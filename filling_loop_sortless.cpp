@@ -168,13 +168,13 @@ struct filling_kind {
 
 int main(int argc, char **argv)
 {
-    const int repeats = 1000;
-    const long long n = 500;
+    const int repeats = 100;
+    const long long n = 10000;
     struct timespec ts_start, ts_end, ts_res;
     const struct filling_kind kinds[] = {
-        { filling_origin,           "filling_origin" },
-        { filling_minopt,           "filling_minopt" },
-        { filling_alloc,            "filling_alloc" },
+        //{ filling_origin,           "filling_origin" },
+        //{ filling_minopt,           "filling_minopt" },
+        //{ filling_alloc,            "filling_alloc" },
         { filling_lesssort,         "filling_lesssort" },
         { filling_lesssort_precalc, "filling_lesssort_precalc" },
         { filling_lesssort_alloc,   "filling_lesssort_alloc" },
@@ -192,7 +192,7 @@ int main(int argc, char **argv)
         }
         clock_gettime(CLOCK_MONOTONIC, &ts_end);
         timespec_diff(ts_start, ts_end, &ts_res);
-        printf("%25s x %d: %llu.%.10llu\n", kinds[i].name, repeats, ts_res.tv_sec, ts_res.tv_nsec);
+        printf("%25s x %d: %.9f\n", kinds[i].name, repeats, (double)(ts_res.tv_sec + 1.0e-9*ts_res.tv_nsec));
     }
 
     /*

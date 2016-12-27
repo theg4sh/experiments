@@ -1,10 +1,29 @@
 Results on Intel(R) Core(TM) i7 @ 2.80GHz
     repeats: 1000
     count: 500
-               filling_origin x 1000: 9.0373646562
-               filling_minopt x 1000: 9.0366529329
-                filling_alloc x 1000: 8.0266817906
-             filling_lesssort x 1000: 0.0009924248
-     filling_lesssort_precalc x 1000: 0.0015351481
-       filling_lesssort_alloc x 1000: 0.0008667004
+               filling_origin x 1000: 9.373646562
+               filling_minopt x 1000: 9.366529329
+                filling_alloc x 1000: 8.266817906
+             filling_lesssort x 1000: 0.009924248
+     filling_lesssort_precalc x 1000: 0.015351481
+       filling_lesssort_alloc x 1000: 0.008667004
+
+    repeats: 100
+    count: 500
+               filling_origin x 100: 0.950298389
+               filling_minopt x 100: 0.952759114
+                filling_alloc x 100: 0.844310783
+             filling_lesssort x 100: 0.000991917
+     filling_lesssort_precalc x 100: 0.001527986
+       filling_lesssort_alloc x 100: 0.000849476
+
+    repeats: 100
+    count: 10000
+               filling_origin x 100: 586.399347237
+               filling_minopt x 100: 585.032718914
+                filling_alloc x 100: 533.968311924
+             filling_lesssort x 100: 0.045311705
+     filling_lesssort_precalc x 100: 0.054538855
+       filling_lesssort_alloc x 100: 0.045214453
+
 
