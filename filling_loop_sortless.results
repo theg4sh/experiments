@@ -2,32 +2,33 @@ Results on Intel(R) Core(TM) i7 @ 2.80GHz
 
     repeats: 1000
     count: 500
-                     filling_origin x 1000: 9.486456351  1 iter avg 0.009486456
-                     filling_minopt x 1000: 9.512943645  1 iter avg 0.009512944
-                      filling_alloc x 1000: 8.197523450  1 iter avg 0.008197523
-                   filling_lesssort x 1000: 6.897609196  1 iter avg 0.006897609
-           filling_lesssort_precalc x 1000: 6.859834196  1 iter avg 0.006859834
-          filling_lesssort_precalc2 x 1000: 11.166168273  1 iter avg 0.011166168
-             filling_lesssort_alloc x 1000: 6.590860940  1 iter avg 0.006590861
-       filling_lesssort_alloc_break x 1000: 5.663707626  1 iter avg 0.005663708
+                    filling_origin x 1000: 9.486456351  1 iter avg 0.009486456
+                    filling_minopt x 1000: 9.512943645  1 iter avg 0.009512944
+                     filling_alloc x 1000: 8.197523450  1 iter avg 0.008197523
+                  filling_lesssort x 1000: 6.897609196  1 iter avg 0.006897609
+          filling_lesssort_precalc x 1000: 6.859834196  1 iter avg 0.006859834
+         filling_lesssort_precalc2 x 1000: 11.166168273  1 iter avg 0.011166168
+            filling_lesssort_alloc x 1000: 6.590860940  1 iter avg 0.006590861
+      filling_lesssort_alloc_break x 1000: 6.385654699  1 iter avg 0.006385655
 
     repeats: 100
     count: 500
-                     filling_origin x 100: 0.943747427  1 iter avg 0.009437474
-                     filling_minopt x 100: 0.948132311  1 iter avg 0.009481323
-                      filling_alloc x 100: 0.840643898  1 iter avg 0.008406439
-                   filling_lesssort x 100: 0.706501887  1 iter avg 0.007065019
-           filling_lesssort_precalc x 100: 0.679377643  1 iter avg 0.006793776
-             filling_lesssort_alloc x 100: 0.653707300  1 iter avg 0.006537073
-       filling_lesssort_alloc_break x 100: 0.573489614  1 iter avg 0.005734896
+                    filling_origin x 100: 0.943747427  1 iter avg 0.009437474
+                    filling_minopt x 100: 0.948132311  1 iter avg 0.009481323
+                     filling_alloc x 100: 0.840643898  1 iter avg 0.008406439
+                  filling_lesssort x 100: 0.706501887  1 iter avg 0.007065019
+          filling_lesssort_precalc x 100: 0.679377643  1 iter avg 0.006793776
+            filling_lesssort_alloc x 100: 0.653707300  1 iter avg 0.006537073
+      filling_lesssort_alloc_break x 100: 0.573489614  1 iter avg 0.005734896
 
     repeats: 100
     count: 10000
-                     filling_origin x 100: 586.399347237  1 iter avg 5.863993472
-                     filling_minopt x 100: 585.032718914  1 iter avg 5.850327189
-                      filling_alloc x 100: 533.968311924  1 iter avg 5.339683119
-                   filling_lesssort x 100: 552.314313408  1 iter avg 5.523143134
-           filling_lesssort_precalc x 100: 540.896136543  1 iter avg 5.408961365
-             filling_lesssort_alloc x 100: 497.780295379  1 iter avg 4.977802953
+                    filling_origin x 100: 586.399347237  1 iter avg 5.863993472
+                    filling_minopt x 100: 585.032718914  1 iter avg 5.850327189
+                     filling_alloc x 100: 533.968311924  1 iter avg 5.339683119
+                  filling_lesssort x 100: 552.314313408  1 iter avg 5.523143134
+          filling_lesssort_precalc x 100: 540.896136543  1 iter avg 5.408961365
+            filling_lesssort_alloc x 100: 497.780295379  1 iter avg 4.977802953
+      filling_lesssort_alloc_break x 100: 159.098596131  1 iter avg 1.590985961
           
 
