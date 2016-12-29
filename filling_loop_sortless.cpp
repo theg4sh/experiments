@@ -105,7 +105,7 @@ TESTFUNC(filling_karatsuba) {
     vector< pair<t_ull, int> > vec;
 
     for (int a=1; a<=n-1; a++) {
-		a5 = a>1000 ? karatsuba(karatsuba(karatsuba(a,a), karatsuba(a,a)), a) : (t_ull)a*a*a*a*a;
+        a5 = a>1000 ? karatsuba(karatsuba(karatsuba(a,a), karatsuba(a,a)), a) : (t_ull)a*a*a*a*a;
         for (int b=a+1; b<=n; b++) {
             b5 = b>1000 ? karatsuba(karatsuba(karatsuba(b,b), karatsuba(b,b)), b) : (t_ull)b*b*b*b*b;
             sa5b5 = a5+b5;
@@ -462,3 +462,5 @@ int main(int argc, char **argv)
 
     return 0;
 }
+
+// vim: ts=4 sw=4 et
