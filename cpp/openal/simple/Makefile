@@ -6,7 +6,7 @@ all: src/altoolset/wav_player.o src/altoolset/context.o src/altoolset/device.o m
 	g++ -Wall -std=c++11 -g -I$(INCLUDE_DIR) -o openal-simple $^ -lopenal -lalut
 
 clean:
-	rm -f ./src/altoolset/*.o
+	rm -f ./src/altoolset/*.o ./*.o
 	rm -f ./openal-simple
 
 %.o: %.cpp
