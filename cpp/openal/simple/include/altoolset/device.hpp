@@ -34,6 +34,8 @@ namespace altoolset {
 
         std::shared_ptr<Context> createContext();
 
+        ALCint getDeviceRate();
+
         static std::vector<std::string> listAudioDevices()
         {
             std::vector<std::string> list{};

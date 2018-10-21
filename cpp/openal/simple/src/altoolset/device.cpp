@@ -32,6 +32,12 @@ bool Device::open() {
     return this->isOpened;
 }
 
+ALCint Device::getDeviceRate() {
+    ALCint devFreq;
+    alcGetIntegerv(this->device, ALC_FREQUENCY, 1, &devFreq);
+    return devFreq;
+}
+
 std::shared_ptr<Context> Device::createContext()
 {
     if (this->device == NULL) {

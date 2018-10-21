@@ -1,7 +1,8 @@
 #ifndef ALTOOLSET_HPP
 #define ALTOOLSET_HPP
 
-#include "wav_player.hpp"
+#include "player.hpp"
+#include "generator.hpp"
 #include "context.hpp"
 #include "device.hpp"
 

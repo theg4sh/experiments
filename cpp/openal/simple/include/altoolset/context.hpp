@@ -8,6 +8,8 @@
 #include <AL/alut.h>
 
 #include "altoolset/wav_player.hpp"
+#include "altoolset/queue_player.hpp"
+#include "altoolset/generator.hpp"
 
 namespace altoolset {
 
@@ -16,7 +18,8 @@ namespace altoolset {
         ALCcontext* context;
         ALCenum error = AL_NO_ERROR;
 
-        std::vector<std::shared_ptr<WavPlayer>> wavPlayers;
+        std::vector<std::shared_ptr<WavPlayer>>   wavPlayers;
+        std::vector<std::shared_ptr<QueuePlayer>> queuePlayers;
     public:
         Context(ALCcontext* context);
 
@@ -29,7 +32,8 @@ namespace altoolset {
 
         void setCurrent();
 
-        std::weak_ptr<WavPlayer> createWavPlayer(std::string waveFile);
+        std::shared_ptr<Player> createWavPlayer(std::string waveFile);
+        std::shared_ptr<Player> createQueuePlayer(Generator& generator);
     };
 
 }

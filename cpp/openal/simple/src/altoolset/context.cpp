@@ -12,6 +12,7 @@ Context::Context(ALCcontext* context): context(context) {}
 
 Context::~Context() {
     this->wavPlayers.clear();
+    this->queuePlayers.clear();
     if (this->context) {
         alcMakeContextCurrent(NULL);
         alcDestroyContext(this->context);
@@ -22,12 +23,19 @@ void Context::setCurrent() {
     alcMakeContextCurrent(this->context);
 }
 
-std::weak_ptr<WavPlayer> Context::createWavPlayer(std::string waveFile) {
+std::shared_ptr<Player> Context::createWavPlayer(std::string waveFile) {
     auto wp = std::make_shared<WavPlayer>(waveFile);
     wp->init();
-    auto p = std::weak_ptr<WavPlayer>(wp);
+    auto p = std::shared_ptr<Player>(wp);
     this->wavPlayers.push_back(std::move(wp));
     return p;
+}
+
+std::shared_ptr<Player> Context::createQueuePlayer(Generator& generator) {
+    auto wp = std::make_shared<QueuePlayer>(generator.getFrequency(), generator);
+    wp->init();
+    this->queuePlayers.push_back(wp);
+    return wp;
 }
 
 }

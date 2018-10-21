@@ -15,6 +15,8 @@ namespace altoolset {
          * @brief Wait unless finished
          */
         virtual void join() = 0;
+
+        ~Player() = default;
     };
 
 }
