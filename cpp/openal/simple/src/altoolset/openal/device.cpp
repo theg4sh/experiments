@@ -3,9 +3,11 @@
 #include <AL/alc.h>
 #include <AL/alut.h>
 
-#include "altoolset/device.hpp"
+#include "altoolset/openal/device.hpp"
 
 namespace altoolset {
+
+namespace openal {
 
 Device::Device(const char* deviceName):
     isOpened(false)
@@ -45,8 +47,10 @@ std::shared_ptr<Context> Device::createContext()
     }
     auto alctx = alcCreateContext(this->device, NULL);
     std::cerr << "Context: " << alctx << std::endl;
-    auto ctx = std::make_shared<altoolset::Context>(alctx);
+    auto ctx = std::make_shared<altoolset::openal::Context>(alctx);
     return std::move(ctx);
 }
 
-} // namespace altoolset
+} // openal
+
+} // altoolset

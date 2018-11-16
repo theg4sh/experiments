@@ -4,39 +4,67 @@
 #include <queue>
 #include <vector>
 #include <limits>
+#include <cmath>
 #include <AL/al.h>
 #include <AL/alc.h>
 
 namespace altoolset {
 
+    typedef short BufferDataType;
+    typedef std::vector<BufferDataType> BufferType;
+
+    const ALdouble CIRCLE = M_PI * 2.0f;
+
     class Generator
     {
     private:
-        using BufferType = std::vector<short>;
-        BufferType buffer;
-    protected:
-
-        ALsizei size;
-        ALCint frequency;
         ALCint deviceRate;
+    protected:
+        /**
+         * @brief buffer have size equal to deviceRate value, which means
+         * it contains wave for one second.
+         */
+        BufferType buffer;
 
-        BufferType& getBuffer() { return this->buffer; }
+        ALCint getBufferMaxValue();
+        ALCint getBufferMinValue();
 
-        ALCint getBufferMaxValue() { return std::numeric_limits<short>::max(); }
+        /**
+         * @brief feedFrequency uses to change frequency in a tick
+         */
+        virtual void feedFrequency();
+
+        /**
+         * @brief getFrequency uses to finalize frequency value
+         */
+        virtual ALfloat getFrequency() const = 0;
 
     public:
-        Generator(ALsizei bufferSize, ALCint frequency, ALCint deviceRate):
-            buffer(bufferSize), size(bufferSize), frequency(frequency), deviceRate(deviceRate)
+        Generator(ALCint deviceRate):
+            deviceRate(deviceRate)
         {}
 
         ~Generator() = default;
 
-        ALCint getFrequency() const { return this->frequency; }
-        ALCint getDeviceRate() const { return this->deviceRate; }
-        const short* getData() const { return this->buffer.data(); }
-        ALsizei getDataSize() const { return this->size; }
+        /**
+         * @brief Initialize container
+         */
+        virtual void init();
 
-        virtual void init() {};
+        /**
+         * @brief generateNextStep
+         * TODO: rename that method
+         */
+        virtual ALdouble generateNextStep() = 0;
+
+        const BufferDataType* getData() const;
+        /**
+         * @brief return size of data. Expected to be constant.
+         */
+        ALsizei getDataSize() const;
+
+        ALCint getDeviceRate() const;
+
         virtual void generate() = 0;
     };
 

@@ -1,4 +1,4 @@
-#include <altoolset/silence_generator.hpp>
+#include "altoolset/generators/silence_generator.hpp"
 
 namespace altoolset {
 

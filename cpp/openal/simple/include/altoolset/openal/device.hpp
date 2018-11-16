@@ -8,11 +8,12 @@
 #include <AL/al.h>
 #include <AL/alc.h>
 #include <AL/alext.h>
-#include <AL/alut.h>
 
-#include "altoolset/context.hpp"
+#include "altoolset/openal/context.hpp"
 
 namespace altoolset {
+
+namespace openal {
 
     class Device
     {
@@ -28,7 +29,6 @@ namespace altoolset {
         ~Device();
 
         ALuint getError() const { return this->error; }
-        std::string getErrorStr() const { return alutGetErrorString(this->error); }
 
         bool open();
 
@@ -39,16 +39,19 @@ namespace altoolset {
         static std::vector<std::string> listAudioDevices()
         {
             std::vector<std::string> list{};
-            if (alcIsExtensionPresent(NULL, "ALC_enumeration_EXT") == AL_FALSE)
+            if (alcIsExtensionPresent(NULL, "ALC_ENUMERATION_EXT") == AL_FALSE)
             {
                 std::cerr << "Listing error: Enumeration is disabled" << std::endl;
                 return list;
             }
-            const ALCchar *devices;
-            if (alcIsExtensionPresent(NULL, "ALC_enumerate_all_EXT") == AL_TRUE)
+            const ALCchar *devices = NULL;
+            if (alcIsExtensionPresent(NULL, "ALC_ENUMERATE_ALL_EXT") == AL_TRUE) {
                 devices = (char *)alcGetString(NULL, ALC_ALL_DEVICES_SPECIFIER);
-            else
-                devices = (char *)alcGetString(NULL, ALC_DEVICE_SPECIFIER);
+            }
+            if (devices == NULL) {
+                devices = (char *)alcGetString(NULL, ALC_DEFAULT_DEVICE_SPECIFIER);
+            }
+            std::cerr << "devices: " << devices << std::endl;
 
             size_t len = 0;
             const ALCchar *device = devices, *next = devices + 1;
@@ -62,6 +65,9 @@ namespace altoolset {
             return list;
         }
     };
-}
+
+} // openal
+
+} // altoolset
 
 #endif

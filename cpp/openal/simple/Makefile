@@ -1,22 +1,40 @@
 # Required libopenal-dev libalut-dev
 
-INCLUDE_DIR=./include
 
-all: src/altoolset/wav_player.o \
-	src/altoolset/queue_player.o \
-	src/altoolset/silence_generator.o \
-	src/altoolset/sin_generator.o \
-	src/altoolset/context.o \
-	src/altoolset/device.o \
-	main.o
-	g++ -Wall -std=c++14 -g -I$(INCLUDE_DIR) -o openal-simple $^ -lopenal -lalut -lpthread \
-		-lboost_system -lboost_program_options -lboost_filesystem
+#OPENAL_PATH?=
+OPENAL_PATH?=$(HOME)/repos/theg4sh/openal-soft
+
+ifneq ($(OPENAL_PATH),)
+INCLUDES = -I./include -I$(OPENAL_PATH)/include
+LIBRARIES = -L$(OPENAL_PATH)/build
+else
+INCLUDES = -I./include
+endif
+
+LIBRARIES += -lopenal -lalut -lpthread
+LIBRARIES += -lboost_system -lboost_program_options -lboost_filesystem
+CXX_FLAGS += -Wall -std=c++14 -g $(INCLUDES)
+CXX = g++ $(CXX_FLAGS)
+
+# src/altoolset files
+SOURCES := $(addprefix src/altoolset/, \
+			generator.o \
+			generators/silence_generator.o \
+			generators/sin_generator.o \
+			generators/floating_sin_generator.o \
+			openal/wav_player.o \
+			openal/queue_player.o \
+			openal/context.o \
+			openal/device.o)
+SOURCES += main.o
+
+all: $(SOURCES)
+	$(CXX) -o openal-simple $^ $(LIBRARIES)
 
 clean:
-	rm -f ./src/altoolset/*.o ./*.o
+	rm -f ./src/altoolset/openal/*.o ./src/altoolset/*.o ./*.o
 	rm -f ./openal-simple
 
 %.o: %.cpp
-	g++ -Wall -std=c++14 -g -I$(INCLUDE_DIR) -c -o $@ $^ -lopenal -lalut \
-		-lboost_system -lboost_program_options -lboost_filesystem
+	$(CXX) -c -o $@ $^ $(LIBRARIES)
 

@@ -3,10 +3,12 @@
 #include <AL/alc.h>
 #include <AL/alut.h>
 
-#include "altoolset/context.hpp"
-#include "altoolset/wav_player.hpp"
+#include "altoolset/openal/context.hpp"
+#include "altoolset/openal/wav_player.hpp"
 
 namespace altoolset {
+
+namespace openal {
 
 Context::Context(ALCcontext* context): context(context) {}
 
@@ -32,10 +34,12 @@ std::shared_ptr<Player> Context::createWavPlayer(std::string waveFile) {
 }
 
 std::shared_ptr<Player> Context::createQueuePlayer(Generator& generator) {
-    auto wp = std::make_shared<QueuePlayer>(generator.getFrequency(), generator);
+    auto wp = std::make_shared<QueuePlayer>(generator.getDeviceRate(), generator);
     wp->init();
     this->queuePlayers.push_back(wp);
     return wp;
 }
 
-}
+} // openal
+
+} // altoolset

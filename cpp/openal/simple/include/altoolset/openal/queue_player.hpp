@@ -17,7 +17,7 @@ namespace altoolset {
     class QueuePlayer: public Player
     {
     private:
-        static const uint8_t BUFFERS_COUNT = 8;
+        static const uint8_t BUFFERS_COUNT = 4;
         std::stack<ALuint> buffersStack;
         ALuint buffers[QueuePlayer::BUFFERS_COUNT];
         ALuint source;
@@ -30,10 +30,7 @@ namespace altoolset {
         Generator& generator;
     public:
         QueuePlayer(ALCint frequency, Generator& generator):
-            frequency(frequency), generator(generator)
-        {
-            workerRunning = false;
-        }
+            workerRunning(false), frequency(frequency), generator(generator) {}
 
         ~QueuePlayer();
 

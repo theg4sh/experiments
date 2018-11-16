@@ -1,5 +1,5 @@
-#ifndef ALTOOLSET_SIN_GENERATOR_HPP
-#define ALTOOLSET_SIN_GENERATOR_HPP
+#ifndef ALTOOLSET_SILENCE_GENERATOR_HPP
+#define ALTOOLSET_SILENCE_GENERATOR_HPP
 
 #include <iostream>
 #include <cmath>
@@ -9,17 +9,15 @@
 
 namespace altoolset {
 
-    class SinGenerator : public Generator
+    class SilenceGenerator : public Generator
     {
         ALsizei size, freq;
         ALenum format;
         ALvoid *data;
 
-        ALfloat lastOffset = 0;
-
     public:
-        SinGenerator(std::size_t bufferSize, ALCint frequency, ALCint deviceRate):
-            Generator(bufferSize, frequency, deviceRate) {}
+        SilenceGenerator(ALCint deviceRate):
+            Generator(deviceRate) {}
 
         virtual void init() override;
         virtual void generate() override;

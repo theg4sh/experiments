@@ -6,8 +6,8 @@
 #include <AL/alc.h>
 #include <AL/alut.h>
 
-#include "altoolset/context.hpp"
-#include "altoolset/wav_player.hpp"
+#include "altoolset/openal/context.hpp"
+#include "altoolset/openal/wav_player.hpp"
 
 namespace altoolset {
 
@@ -26,14 +26,14 @@ WavPlayer::~WavPlayer() {
 bool WavPlayer::init() {
     alutLoadWAVFile((ALbyte*)this->waveFile.c_str(), &this->format,
             &this->data, &this->size, &this->freq, AL_FALSE);
-    std::cerr << "Test " << this->data << std::endl;
-    ALCint idat = 0;
-    short* dat = (short*)this->data;
-    for (; idat<this->size && dat[idat]==0; idat++);
-    for (size_t i = 0; i<10; i++) {
-        std::cerr << "["<<i<<"]:" << dat[idat+i] << " ";
-    }
-    std::cerr << std::endl;
+    std::cerr << "Test wav" << this->data << std::endl;
+    //ALCint idat = 0;
+    //short* dat = (short*)this->data;
+    //for (; idat<this->size && dat[idat]==0; idat++);
+    //for (size_t i = 0; i<10; i++) {
+    //    std::cerr << "["<<i<<"]:" << dat[idat+i] << " ";
+    //}
+    //std::cerr << std::endl;
     //std::cerr << "Loaded wav file: " << this->waveFile << " Size:" << this->size << std::endl;
 
     alGenBuffers((ALuint)1, &this->buffer);

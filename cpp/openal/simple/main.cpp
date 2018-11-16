@@ -10,11 +10,12 @@
 #include <boost/algorithm/string.hpp>
 
 #include "altoolset/altoolset.hpp"
-#include "altoolset/sin_generator.hpp"
+#include "altoolset/generators/sin_generator.hpp"
+#include "altoolset/generators/floating_sin_generator.hpp"
 
 namespace po=boost::program_options;
 
-void WavPlay(std::shared_ptr<altoolset::Context> ctx, size_t count, const char* filename)
+void WavPlay(std::shared_ptr<altoolset::openal::Context> ctx, size_t count, const char* filename)
 {
     std::stack<std::weak_ptr<altoolset::Player>> keeper;
     for (size_t i = 0; i < count; i++) {
@@ -33,9 +34,29 @@ void WavPlay(std::shared_ptr<altoolset::Context> ctx, size_t count, const char* 
     }
 }
 
-void QueuePlay(altoolset::Device& dev, ALCint frequency, std::chrono::milliseconds time, std::shared_ptr<altoolset::Context> ctx)
+void QueueFloatingPlay(altoolset::openal::Device& dev, ALCint freqMin, ALCint freqMax, ALfloat period, std::chrono::milliseconds time, std::shared_ptr<altoolset::openal::Context> ctx)
 {
-    altoolset::SinGenerator generator(dev.getDeviceRate(), frequency, dev.getDeviceRate());
+    const auto deviceRate = dev.getDeviceRate();
+    std::cout << "Creating frequency wave..." << std::endl;
+    altoolset::SinGenerator frequencyWave(period, deviceRate);
+    frequencyWave.setOffset(M_PI/4);
+    frequencyWave.init();
+
+    std::cout << "Creating floating sin generator " << freqMin << "<->" << freqMax << " ..." << std::endl;
+    altoolset::FloatingSinGenerator generator(freqMin, freqMax, &frequencyWave, deviceRate);
+    generator.init();
+    std::cout << "Creating queue player..." << std::endl;
+    auto player = ctx->createQueuePlayer(generator);
+    std::cout << "Playing..." << std::endl;
+    player->play();
+    std::this_thread::sleep_for(time);
+    player->stop();
+}
+
+void QueueSinPlay(altoolset::openal::Device& dev, ALCint frequency, std::chrono::milliseconds time, std::shared_ptr<altoolset::openal::Context> ctx)
+{
+    altoolset::SinGenerator generator(frequency, dev.getDeviceRate());
+    generator.init();
     auto player = ctx->createQueuePlayer(generator);
     player->play();
     std::this_thread::sleep_for(time);
@@ -48,7 +69,8 @@ int main(int argc, char** argv)
     std::string runType;
     desc.add_options()
         ("help,h", "Print this text")
-        ("type,t", po::value(&runType), "Command type: wav|file, freq");
+        ("devices", "List of available devices")
+        ("type,t", po::value(&runType), "Command type: wav|file, sin, floatsin");
 
     std::string filePath;
     po::options_description wavDesc("Play wav file");
@@ -60,20 +82,27 @@ int main(int argc, char** argv)
     sinDesc.add_options()
         ("freq,f", po::value(&genFrequency), "Sound frequency");
 
+    struct _genFloatFrequency {
+        int leftFreq;
+        int rightFreq;
+        float period;
+    } genFloatFrequency;
+    po::options_description floatSinDesc("Generate floating sinusoidal");
+    floatSinDesc.add_options()
+        ("leftfreq,l", po::value(&(genFloatFrequency.leftFreq)), "Sound frequency start")
+        ("rightfreq,r", po::value(&genFloatFrequency.rightFreq), "Sound frequency end")
+        ("period,p", po::value(&genFloatFrequency.period), "Frequency change period (sinusoidal)");
+
     po::variables_map vm;
 
 
-    auto devicesList = altoolset::Device::listAudioDevices();
+    auto devicesList = altoolset::openal::Device::listAudioDevices();
     if (devicesList.empty()) {
         std::cout << "Cannot found any audio device" << std::endl;
         return 99;
     }
-    std::cout << "Devices list:" << std::endl;
-    for (auto device : devicesList) {
-        std::cout << "  " << device << std::endl;
-    }
 
-    altoolset::Device device(devicesList[0].c_str());
+    altoolset::openal::Device device(devicesList[0].c_str());
     if (!device.open()) {
         std::cerr << "main/open: " << device.getError() << std::endl;
         return 1;
@@ -90,7 +119,42 @@ int main(int argc, char** argv)
         po::parsed_options parsed = po::command_line_parser(argc, argv).options(desc).allow_unregistered().run();
         po::store(parsed, vm);
         po::notify(vm);
-        if (runType == "wav" || runType == "file") {
+        if (vm.count("help")) {
+            // nop, just fallthrought
+        }
+        else if (vm.count("devices")) {
+            std::cout << "Devices list:" << std::endl;
+            for (auto device : devicesList) {
+                std::cout << "  " << device << std::endl;
+            }
+            return 0;
+        }
+        else if (runType == "sin") {
+            desc.add(sinDesc);
+            po::store(po::parse_command_line(argc, argv, desc), vm);
+            po::notify(vm);
+            if (!vm.count("freq")) {
+                std::cerr << desc << std::endl;
+                return 1;
+            }
+            QueueSinPlay(device, genFrequency, std::chrono::seconds(20), ctx);
+            return 0;
+        }
+        else if (runType == "floatsin") {
+            desc.add(floatSinDesc);
+            po::store(po::parse_command_line(argc, argv, desc), vm);
+            po::notify(vm);
+            if (!vm.count("leftfreq") || !vm.count("rightfreq") || !vm.count("period")) {
+                std::cerr << desc << std::endl;
+                return 1;
+            }
+            float period = (float)genFloatFrequency.period;
+            std::cerr << "Period: " << period << std::endl;
+            QueueFloatingPlay(device, genFloatFrequency.leftFreq, genFloatFrequency.rightFreq,
+                              (ALfloat)period, std::chrono::seconds(60), ctx);
+            return 0;
+        }
+        else if (runType == "wav" || runType == "file") {
             desc.add(wavDesc);
             po::store(po::parse_command_line(argc, argv, desc), vm);
             po::notify(vm);
@@ -103,25 +167,13 @@ int main(int argc, char** argv)
             auto fp = boost::filesystem::absolute(boost::filesystem::path(filePath));
             std::cout << fp << std::endl;
             WavPlay(ctx, 1, fp.c_str());
-        }
-        else if (runType == "freq") {
-            desc.add(sinDesc);
-            po::store(po::parse_command_line(argc, argv, desc), vm);
-            po::notify(vm);
-            if (!vm.count("freq")) {
-                std::cerr << desc << std::endl;
-                return 1;
-            }
-            QueuePlay(device, genFrequency, std::chrono::seconds(1), ctx);
-        }
-        else
-        {
-            desc.add(wavDesc).add(sinDesc);
-            std::cout << desc << std::endl;
+            return 0;
         }
     } catch(std::exception &e) {
-        desc.add(wavDesc).add(sinDesc);
-        std::cout << desc << std::endl;
+        // nop
+        std::cerr << e.what() << std::endl;
     }
+    //desc.add(wavDesc).add(sinDesc).add(floatSinDesc);
+    std::cout << desc << std::endl;
     return 0;
 }

@@ -7,11 +7,13 @@
 #include <AL/alc.h>
 #include <AL/alut.h>
 
-#include "altoolset/wav_player.hpp"
-#include "altoolset/queue_player.hpp"
+#include "altoolset/openal/wav_player.hpp"
+#include "altoolset/openal/queue_player.hpp"
 #include "altoolset/generator.hpp"
 
 namespace altoolset {
+
+namespace openal {
 
     class Context
     {
@@ -36,6 +38,8 @@ namespace altoolset {
         std::shared_ptr<Player> createQueuePlayer(Generator& generator);
     };
 
-}
+} // openal
+
+} // altoolset
 
 #endif
