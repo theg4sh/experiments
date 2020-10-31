@@ -18,6 +18,10 @@ template <> struct FNV_offset_basis<uint64_t> {
 // 128: 0x6c62272e07bb014262b821756295c58d
 // 256: 0xdd268dbcaac550362d98c384c4e576ccc8b1536847b6bbb31023b4c8caee0535
 
+} // namespace hash::fnv::details
+
+namespace hash::fnv::details {
+
 template <typename HashType> struct FNV_prime {};
 //
 template <> struct FNV_prime<uint32_t> {

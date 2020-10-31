@@ -7,7 +7,7 @@ int main(int argc, char *argv[]) {
     return 1;
   }
   const std::string hash_this(argv[1]);
-  auto hash = ::hash::fnv::fnv1a<unsigned char>(hash_this);
+  auto hash = ::hash::fnv::fnv1a<uint32_t>(hash_this);
 
   std::cout << "Orig: " << hash_this << std::endl;
   std::cout << "Hash: " << hash << std::endl;
